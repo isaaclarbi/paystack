@@ -74,6 +74,7 @@ class PaystackSettings(Document):
 		invoice_api.create_invoice(customer=customer_api.customer_code,
 								   amount=amount, due_date=nowdate(),
 								   description=description,
+								   currency='GHS',
 								   invoice_number=identifier, metadata=metadata)
 
 		if not invoice_api.ctx.status:
