@@ -47,38 +47,38 @@ class PaystackSettings(Document):
 	# 		frappe.throw(
 	# 			_('{currency} is not supported by Paystack at the moment.').format(currency))
 
-	def get_payment_url(self, **kwargs):
-		amount = kwargs.get('amount')
-		description = kwargs.get('description')
-		slug = kwargs.get('reference_docname')
-		email = kwargs.get('payer_email')
-		metadata = {
-			'payment_request': kwargs.get('order_id'),
-			'customer_name': kwargs.get('payer_name')
-		}
+	# def get_payment_url(self, **kwargs):
+	# 	amount = kwargs.get('amount')
+	# 	description = kwargs.get('description')
+	# 	slug = kwargs.get('reference_docname')
+	# 	email = kwargs.get('payer_email')
+	# 	metadata = {
+	# 		'payment_request': kwargs.get('order_id'),
+	# 		'customer_name': kwargs.get('payer_name')
+	# 	}
 
-		secret_key = self.get_password(fieldname='secret_key', raise_exception=False)
+	# 	secret_key = self.get_password(fieldname='secret_key', raise_exception=False)
 
-		customer_api = paystakk.Customer(secret_key=secret_key, public_key=self.public_key)
+	# 	customer_api = paystakk.Customer(secret_key=secret_key, public_key=self.public_key)
 
-		customer_api.fetch_customer(email)
-		if not customer_api.ctx.status:
-			customer_api.create_customer(email=email)
+	# 	customer_api.fetch_customer(email)
+	# 	if not customer_api.ctx.status:
+	# 		customer_api.create_customer(email=email)
 
-		if not customer_api.ctx.status:
-			frappe.throw(customer_api.ctx.message)
+	# 	if not customer_api.ctx.status:
+	# 		frappe.throw(customer_api.ctx.message)
 
-		invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
+	# 	invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
 
-		identifier = hash('{0}{1}{2}'.format(amount, description, slug))
-		invoice_api.create_invoice(customer=customer_api.customer_code,
-								   amount=amount, due_date=nowdate(),
-								   description=description,
-								   invoice_number=identifier, metadata=metadata)
+	# 	identifier = hash('{0}{1}{2}'.format(amount, description, slug))
+	# 	invoice_api.create_invoice(customer=customer_api.customer_code,
+	# 							   amount=amount, due_date=nowdate(),
+	# 							   description=description,
+	# 							   invoice_number=identifier, metadata=metadata)
 
-		if not invoice_api.ctx.status:
-			frappe.throw(invoice_api.ctx.message)
-		else:
-			payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
-				invoice_code=invoice_api.request_code)
-			return payment_url
+	# 	if not invoice_api.ctx.status:
+	# 		frappe.throw(invoice_api.ctx.message)
+	# 	else:
+	# 		payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
+	# 			invoice_code=invoice_api.request_code)
+	# 		return payment_url
