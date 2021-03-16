@@ -12,15 +12,15 @@ from frappe.model.document import Document
 from frappe.utils import call_hook_method, nowdate
 from requests import RequestException, ConnectionError
 
-SUPPORTED_CURRENCIES = ['NGN']
+SUPPORTED_CURRENCIES = ['GHS']
 
 
 class PaystackSettings(Document):
 	supported_currencies = SUPPORTED_CURRENCIES
 
-	def validate(self):
-		if not self.flags.ignore_mandatory:
-			self.validate_credentials()
+	# def validate(self):
+	# 	if not self.flags.ignore_mandatory:
+	# 		self.validate_credentials()
 
 	def on_update(self):
 		name = 'Paystack-{0}'.format(self.gateway_name)
@@ -31,21 +31,21 @@ class PaystackSettings(Document):
 		)
 		call_hook_method('payment_gateway_enabled', gateway=name)
 
-	def validate_credentials(self):
-		api = paystakk.TransferControl(secret_key=self.secret_key, public_key=self.public_key)
-		try:
-			api.get_balance()
-		except ConnectionError:
-			frappe.throw('There was a connection problem. Please ensure that'
-						 ' you have a working internet connection.')
+	# def validate_credentials(self):
+	# 	api = paystakk.TransferControl(secret_key=self.secret_key, public_key=self.public_key)
+	# 	try:
+	# 		api.get_balance()
+	# 	except ConnectionError:
+	# 		frappe.throw('There was a connection problem. Please ensure that'
+	# 					 ' you have a working internet connection.')
 
-		if not api.ctx.status:
-			frappe.throw(api.ctx.message, title=_("Failed Credentials Validation"))
+	# 	if not api.ctx.status:
+	# 		frappe.throw(api.ctx.message, title=_("Failed Credentials Validation"))
 
-	def validate_transaction_currency(self, currency):
-		if currency not in self.supported_currencies:
-			frappe.throw(
-				_('{currency} is not supported by Paystack at the moment.').format(currency))
+	# def validate_transaction_currency(self, currency):
+	# 	if currency not in self.supported_currencies:
+	# 		frappe.throw(
+	# 			_('{currency} is not supported by Paystack at the moment.').format(currency))
 
 	def get_payment_url(self, **kwargs):
 		amount = kwargs.get('amount')
