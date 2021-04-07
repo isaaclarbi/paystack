@@ -76,10 +76,12 @@ class PaystackSettings(Document):
 								   description=description,
 								   currency='GHS',
 								   invoice_number=identifier, metadata=metadata)
+		payment_url = 'https://paystack.com/pay/{invoice_code}'.format(invoice_code=invoice_api.request_code)
+		return payment_url
 
-		if not invoice_api.ctx.status:
-			frappe.throw(invoice_api.ctx.message)
-		else:
-			payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
-				invoice_code=invoice_api.request_code)
-			return payment_url
+		# if not invoice_api.ctx.status:
+		# 	frappe.throw(invoice_api.ctx.message)
+		# else:
+		# 	payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
+		# 		invoice_code=invoice_api.request_code)
+		# 	return payment_url
