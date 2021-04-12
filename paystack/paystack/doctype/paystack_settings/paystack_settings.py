@@ -4,6 +4,10 @@
 
 from __future__ import unicode_literals
 
+
+import random
+import string
+
 import frappe
 import paystakk
 from frappe import _
@@ -57,31 +61,42 @@ class PaystackSettings(Document):
 			'customer_name': kwargs.get('payer_name')
 		}
 
+		rand = ''.join([random.choice(
+            string.ascii_letters + string.digits) for n in range(16)])
 		secret_key = self.get_password(fieldname='secret_key', raise_exception=False)
+		random_ref = rand
+		test_email = email
+		test_amount = amount
+		plan = 'Basic'
+		client = TransactionResource(secret_key, random_ref)
+		response = client.initialize(test_amount,
+									test_email)
+		# print(response)
+		return response['data']['authorization_url']
 
-		customer_api = paystakk.Customer(secret_key=secret_key, public_key=self.public_key)
 
-		customer_api.fetch_customer(email)
-		if not customer_api.ctx.status:
-			customer_api.create_customer(email=email)
+		# customer_api = paystakk.Customer(secret_key=secret_key, public_key=self.public_key)
 
-		if not customer_api.ctx.status:
-			frappe.throw(customer_api.ctx.message)
+		# customer_api.fetch_customer(email)
+		# if not customer_api.ctx.status:
+		# 	customer_api.create_customer(email=email)
 
-		invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
+		# if not customer_api.ctx.status:
+		# 	frappe.throw(customer_api.ctx.message)
+
+		# invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
 
 		# identifier = hash('{0}{1}{2}'.format(amount, description, slug))
-		identifier = int(50)
-		invoice_api.create_invoice(customer=customer_api.customer_code,
-								   amount=amount, due_date=nowdate(),
-								   description=description,
-								   currency='GHS',
-								   invoice_number=identifier, metadata=metadata)
+		# invoice_api.create_invoice(customer=customer_api.customer_code,
+		# 						   amount=amount, due_date=nowdate(),
+		# 						   description=description,
+		# 						   currency='GHS',
+		# 						   invoice_number=identifier, metadata=metadata)
 		
 		
-		if not invoice_api.ctx.status:
-			frappe.throw(invoice_api.ctx.message)
-		else:
-			payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
-				invoice_code=invoice_api.request_code)
-			return payment_url
+		# if not invoice_api.ctx.status:
+		# 	frappe.throw(invoice_api.ctx.message)
+		# else:
+		# 	payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
+		# 		invoice_code=invoice_api.request_code)
+		# 	return payment_url
