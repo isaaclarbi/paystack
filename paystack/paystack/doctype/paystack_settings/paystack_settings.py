@@ -77,7 +77,7 @@ class PaystackSettings(Document):
 								   amount=amount, due_date=nowdate(),
 								   description=description,
 								   currency='GHS',
-								   invoice_number=1000001, metadata=metadata)
+								   invoice_number=identifier, metadata=metadata)
 		
 		payment_url = 'https://paystack.com/pay/{invoice_code}'.format(
 				invoice_code=invoice_api.request_code)
