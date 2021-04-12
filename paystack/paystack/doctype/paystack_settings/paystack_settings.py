@@ -71,7 +71,7 @@ class PaystackSettings(Document):
 		invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
 
 		# identifier = hash('{0}{1}{2}'.format(amount, description, slug))
-		identifier = 50
+		identifier = int(50)
 		invoice_api.create_invoice(customer=customer_api.customer_code,
 								   amount=amount, due_date=nowdate(),
 								   description=description,
