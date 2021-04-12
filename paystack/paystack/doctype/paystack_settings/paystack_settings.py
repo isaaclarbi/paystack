@@ -70,14 +70,14 @@ class PaystackSettings(Document):
 
 		invoice_api = paystakk.Invoice(secret_key=secret_key, public_key=self.public_key)
 
-		identifier = hash('{0}{1}{2}'.format(amount, description, slug))
-		print("invoice number is:" + identifier)
-		print("amount:"+amount)
-		invoice_api.create_invoice(customer=customer_api.customer_code,
-								   amount=amount, due_date=nowdate(),
-								   description=description,
-								   currency='GHS',
-								   invoice_number=1000001, metadata=metadata)
+		# identifier = hash('{0}{1}{2}'.format(amount, description, slug))
+		# print("invoice number is:" + identifier)
+		# print("amount:"+amount)
+		# invoice_api.create_invoice(customer=customer_api.customer_code,
+		# 						   amount=amount, due_date=nowdate(),
+		# 						   description=description,
+		# 						   currency='GHS',
+		# 						   invoice_number=1000001, metadata=metadata)
 
 		if not invoice_api.ctx.status:
 			frappe.throw(invoice_api.ctx.message)
