@@ -10,6 +10,7 @@ import string
 
 import frappe
 # import paystakk
+from paystack.resource import TransactionResource
 from frappe import _
 from frappe.integrations.utils import create_payment_gateway
 from frappe.model.document import Document
