@@ -76,7 +76,7 @@ class PaystackSettings(Document):
 								   amount=amount, due_date=nowdate(),
 								   description=description,
 								   currency='GHS',
-								   invoice_number=identifier, metadata=metadata)
+								   invoice_number=100001, metadata=metadata)
 
 		if not invoice_api.ctx.status:
 			frappe.throw(invoice_api.ctx.message)
