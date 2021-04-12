@@ -72,6 +72,7 @@ class PaystackSettings(Document):
 
 		# identifier = hash('{0}{1}{2}'.format(amount, description, slug))
 		identifier = hash('{0}{1}'.format(amount, description))
+		frappe.throw("invoice number is: {0}".format(identifier) )
 		invoice_api.create_invoice(customer=customer_api.customer_code,
 								   amount=amount, due_date=nowdate(),
 								   description=description,
